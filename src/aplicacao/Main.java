@@ -21,7 +21,6 @@ public class Main {
         for (int i = 0; i <= 0; i--){
             program(frame, options, pratosSalgados, pratosDoces);
         }
-
     }
 
     private static void program(JFrame frame, Object[] options, List<Prato> pratosSalgados, List<Prato> pratosDoces) {
@@ -30,33 +29,32 @@ public class Main {
         int massa = JOptionPane.showOptionDialog(frame, StaticFilter.PRATO_MASSA, StaticFilter.CONFIRM, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
         if (massa == JOptionPane.YES_NO_OPTION) {
-            if (pratosSalgados.size() > 0) {
-                logicaIA(frame, options, pratosSalgados, StaticFilter.PRATO_MASSA);
-            }
-
-            int lasanha = JOptionPane.showOptionDialog(frame, StaticFilter.PRATO_LASANHA, StaticFilter.CONFIRM, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-
-            if (lasanha == JOptionPane.YES_NO_OPTION) {
-                acerteiDeNovo(frame);
-            } else {
-                adicionarNovoPrato(frame, pratosSalgados, StaticFilter.PRATO_MASSA);
-            }
+            fluxoPerguntas(frame, options, pratosSalgados, StaticFilter.PRATO_MASSA, StaticFilter.PRATO_LASANHA, JOptionPane.YES_NO_OPTION);
         } else {
-            if (pratosDoces.size() > 0) {
-                logicaIA(frame, options, pratosDoces, StaticFilter.PRATO_BOLO_DE_CHOCOLATE);
-            }
-
-            int boloChocolate = JOptionPane.showOptionDialog(frame, StaticFilter.PRATO_BOLO_DE_CHOCOLATE, StaticFilter.CONFIRM, JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-
-            if (boloChocolate == JOptionPane.YES_NO_OPTION) {
-                acerteiDeNovo(frame);
-            } else {
-                adicionarNovoPrato(frame, pratosDoces, StaticFilter.PRATO_BOLO_DE_CHOCOLATE);
-            }
+            fluxoPerguntas(frame, options, pratosDoces, StaticFilter.PRATO_BOLO_DE_CHOCOLATE, StaticFilter.PRATO_BOLO_DE_CHOCOLATE, JOptionPane.DEFAULT_OPTION);
         }
     }
 
-    private static void logicaIA(JFrame frame, Object[] options, List<Prato> pratos, String filter) {
+    private static void fluxoPerguntas(JFrame frame, Object[] options, List<Prato> pratos, String tipoPrato, String pratoInicial, int yesNoOption) {
+        if (pratos.size() > 0) {
+            boolean voltarInicio = logicaIA(frame, options, pratos, tipoPrato);
+            if (voltarInicio) {
+                return;
+            }
+        }
+
+        int lasanha = JOptionPane.showOptionDialog(frame, pratoInicial, StaticFilter.CONFIRM, yesNoOption, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+        if (lasanha == JOptionPane.YES_NO_OPTION) {
+            acerteiDeNovo(frame);
+        } else {
+            adicionarNovoPrato(frame, pratos, tipoPrato);
+        }
+    }
+
+    private static boolean logicaIA(JFrame frame, Object[] options, List<Prato> pratos, String filter) {
+        List<Prato> pratoList = new ArrayList<>();
+        boolean voltarInicio = false;
         for (Prato listaPratos : pratos) {
             int resposta = JOptionPane.showOptionDialog(frame, StaticFilter.PRATO_QUE_PENSOU + listaPratos.getAdjetivo(), StaticFilter.CONFIRM, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
             if (resposta == JOptionPane.YES_NO_OPTION) {
@@ -64,10 +62,13 @@ public class Main {
                 if (eEsse == JOptionPane.YES_NO_OPTION) {
                     acerteiDeNovo(frame);
                 } else {
-                    adicionarNovoPrato(frame, pratos, filter);
+                    adicionarNovoPrato(frame, pratoList, filter);
                 }
+                voltarInicio = true;
             }
         }
+        pratos.addAll(pratoList);
+        return voltarInicio;
     }
 
     private static void acerteiDeNovo(Frame frame) {
@@ -76,14 +77,16 @@ public class Main {
 
     private static void adicionarNovoPrato(Frame frame, List<Prato> pratos, String filter) {
         String nome = JOptionPane.showInputDialog(frame, StaticFilter.QUAL_PRATO_QUE_PENSOU, StaticFilter.DESISTO, JOptionPane.QUESTION_MESSAGE);
-        String adjetivo;
+        if (nome != null && !nome.isEmpty()) {
+            String adjetivo;
 
-        if (filter.equals(StaticFilter.PRATO_MASSA)){
-            adjetivo = JOptionPane.showInputDialog(frame, nome + StaticFilter.COMPLETE_ADJETIVO_LASANHA, StaticFilter.COMPLETE, JOptionPane.QUESTION_MESSAGE);
-        }else {
-            adjetivo = JOptionPane.showInputDialog(frame, nome + StaticFilter.COMPLETE_ADJETIVO_BOLO, StaticFilter.COMPLETE, JOptionPane.QUESTION_MESSAGE);
+            if (filter.equals(StaticFilter.PRATO_MASSA)) {
+                adjetivo = JOptionPane.showInputDialog(frame, nome + StaticFilter.COMPLETE_ADJETIVO_LASANHA, StaticFilter.COMPLETE, JOptionPane.QUESTION_MESSAGE);
+            } else {
+                adjetivo = JOptionPane.showInputDialog(frame, nome + StaticFilter.COMPLETE_ADJETIVO_BOLO, StaticFilter.COMPLETE, JOptionPane.QUESTION_MESSAGE);
+            }
+
+            pratos.add(new Prato(nome, adjetivo));
         }
-
-        pratos.add(new Prato(nome, adjetivo));
     }
 }
