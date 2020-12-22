@@ -16,4 +16,5 @@ public class StaticFilter {
     public static final String COMPLETE_ADJETIVO_BOLO = " é ______ mas Bolo de Chocolate não.";
     public static final String COMPLETE_ADJETIVO_LASANHA = " é ______ mas Lasanha não.";
     public static final String ACERTEI = "<html><body><p align='center'>Acertei de novo!</p></body></html>";
+    public static final String CAMPO_VAZIO = "O campo não pode ser vazio!";
 }

@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        JFrame frame = new JFrame();
+        Frame frame = new Frame();
         Object[] options = {"Sim", "Não"};
 
         List<Prato> pratosSalgados = new ArrayList<>();
@@ -23,7 +23,7 @@ public class Main {
         }
     }
 
-    private static void program(JFrame frame, Object[] options, List<Prato> pratosSalgados, List<Prato> pratosDoces) {
+    private static void program(Frame frame, Object[] options, List<Prato> pratosSalgados, List<Prato> pratosDoces) {
         JOptionPane.showConfirmDialog(frame, StaticFilter.PRATO_QUE_GOSTA, StaticFilter.JOGO_UNIMED_FOTALEZA, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
         int massa = JOptionPane.showOptionDialog(frame, StaticFilter.PRATO_MASSA, StaticFilter.CONFIRM, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
@@ -35,7 +35,7 @@ public class Main {
         }
     }
 
-    private static void fluxoPerguntas(JFrame frame, Object[] options, List<Prato> pratos, String tipoPrato, String pratoInicial, int yesNoOption) {
+    private static void fluxoPerguntas(Frame frame, Object[] options, List<Prato> pratos, String tipoPrato, String pratoInicial, int yesNoOption) {
         if (pratos.size() > 0) {
             boolean voltarInicio = logicaIA(frame, options, pratos, tipoPrato);
             if (voltarInicio) {
@@ -43,16 +43,16 @@ public class Main {
             }
         }
 
-        int lasanha = JOptionPane.showOptionDialog(frame, pratoInicial, StaticFilter.CONFIRM, yesNoOption, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        int resposta = JOptionPane.showOptionDialog(frame, pratoInicial, StaticFilter.CONFIRM, yesNoOption, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
-        if (lasanha == JOptionPane.YES_NO_OPTION) {
+        if (resposta == JOptionPane.YES_NO_OPTION) {
             acerteiDeNovo(frame);
         } else {
             adicionarNovoPrato(frame, pratos, tipoPrato);
         }
     }
 
-    private static boolean logicaIA(JFrame frame, Object[] options, List<Prato> pratos, String filter) {
+    private static boolean logicaIA(Frame frame, Object[] options, List<Prato> pratos, String filter) {
         List<Prato> pratoList = new ArrayList<>();
         boolean voltarInicio = false;
         for (Prato listaPratos : pratos) {
@@ -87,6 +87,8 @@ public class Main {
             }
 
             pratos.add(new Prato(nome, adjetivo));
+        }else {
+            JOptionPane.showConfirmDialog(frame, StaticFilter.CAMPO_VAZIO, StaticFilter.JOGO_GOURMET, JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null);
         }
     }
 }

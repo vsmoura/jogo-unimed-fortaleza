@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="JogoUnimedFortaleza:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/JogoUnimedFortaleza_jar</output-path>
-    <root id="archive" name="JogoUnimedFortaleza.jar">
-      <element id="module-output" name="JogoUnimedFortaleza" />
-    </root>
-  </artifact>
-</component>
